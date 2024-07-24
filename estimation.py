@@ -17,42 +17,6 @@
 
 # %%
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.stats import norm
-import ipywidgets as widgets
-from IPython.display import display
-def interactive_plot(mu_MDE=2.0, sigma=1.0, alpha=0.05, power=0.8):
-    x_min = -10
-    x_max = max(-x_min, mu_MDE + 5 * sigma)  
-    x = np.linspace(x_min, x_max, 1000)
-    mu_H0 = 0  # Mean of the null hypothesis distribution
-    # Create distributions
-    H0_distribution = norm.pdf(x, mu_H0, sigma)
-    MDE_distribution = norm.pdf(x, mu_MDE, sigma)
-    plt.figure(figsize=(13, 6))
-    plt.plot(x, H0_distribution, color='blue', label='H0 Sample Distribution (Assumes no effect)')
-    #plt.fill_between(x, H0_distribution, color='teal', alpha=0.3)
-    plt.plot(x, MDE_distribution, color='green', label='Alternative Hypothesis Distribution')
- 
-    plt.axvline(mu_H0, color='blue', linestyle='dashed', linewidth=1)
-    plt.axvline(mu_MDE, color='green', linestyle='dashed', linewidth=1)
-    # Calculating the critical z-values for alpha and the inverse of power (beta)
-    z_alpha = norm.ppf(1 - alpha, mu_H0, sigma)
-    beta = 1 - power
-    z_beta = norm.ppf(beta, mu_MDE, sigma)
-    plt.fill_betweenx(H0_distribution, x, z_alpha, where=(x > z_alpha), color='blue', alpha=0.5, label='Type I Error (α)')
-    plt.fill_betweenx(MDE_distribution, x, z_beta, where=(x < z_beta), color='green', alpha=0.5, label='Type II Error β')
-    
-    plt.title('Properly Powering Your (One-sided) AB Test')
-    plt.ylim(0,1)
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-# Create interactive widgets
-widgets.interact(interactive_plot, MDE=(0.0, 1.0, 0.01), sigma=(0.5, 2.0, 0.1), alpha=(0.01, 0.2, 0.01), power=(0.5, 0.99, 0.01))
-
-# %%
-import numpy as np
 import pandas as pd
 from scipy import stats  
 from scipy.stats import norm
@@ -67,14 +31,23 @@ class ABTEST :
         self.beta=beta 
         self.ratio=r
 
-    def estimateSZ (self,p=0.5) :
+    def get_sample_size (self,p=0.5) :
         #we assume the two population have the same variance which is plausible under H0=sigma=self.baseline(1-self.baseline)
         sigma_2=self.baseline*(1-self.baseline)
         m=1/(self.ratio*(1-self.ratio))*sigma_2*(norm.ppf(1-self.alpha/2, loc=0, scale=1)+norm.ppf(1-self.beta, loc=0, scale=1))**2/(self.baseline*self.mde)**2
         ###add the ratio data split 
     
         return (floor(m))
-    
+    def get_weekly_traffic (self):
+
+        """  
+        read the weekly traffic from the user
+           
+        """
+        
+        
+    """def get_duration ():"""
+
             
     #Power analysis method 
     #look at sensitivity to beta and delta given some input data (simulated )
@@ -88,31 +61,6 @@ class ABTEST :
 
 # %% [markdown]
 # This part aim to show that the equal data split between the original and the variant B is the one that minimizes the variance of the estimateur.
-
-# %%
-p=0.4
-ntot=100
-#eps=0.0000000001
-def vsmile(p,ntot,alpha):
-    return np.sqrt(p*(1-p)*(1/(ntot*(alpha))+1/(ntot*(1-alpha))))
-X=np.linspace(0,1,40)
-Y=[]
-for x in X :
-    Y.append(vsmile(p,ntot,x))
-#plt.plot(X,Y)
-fig, ax = plt.subplots()
-
-ax.plot(X, Y, label='Estimated Volatility')
-x_point =0.5
-y_point = vsmile(p,ntot,x_point)
-ax.plot(x_point, y_point, 'ro')  
-ax.set_title('variance in function of data split ')
-ax.set_xlabel('x')
-ax.set_ylabel('y')
-plt.ylim(0,0.4)
-ax.legend()
-# Afficher la figure
-plt.show()
 
 # %% [markdown]
 # Seeing the behaviour of 1-beta in function  OF MDE (CURVE 1)
@@ -337,54 +285,6 @@ def run_simulation():
 type_I_error_rate, power_rate = run_simulation()
 print(f"Type I Error Rate: {type_I_error_rate:.4f}")
 print(f"Power Rate: {power_rate:.4f}")
-
-# %%
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Simulate test statistic data
-np.random.seed(42)
-time = np.arange(1, 21)
-test_statistic = np.cumsum(np.random.normal(loc=0.2, scale=1, size=time.shape))
-
-# Define stopping boundaries (example values)
-upper_boundary = np.linspace(2.5, 3.5, time.size)
-lower_boundary = -upper_boundary
-
-# Create the plot
-plt.figure(figsize=(12, 6))
-plt.plot(time, test_statistic, marker='o', color='yellow', label='Test Statistic')
-plt.plot(time, upper_boundary, '--', color='white', label='Upper Boundary')
-plt.plot(time, lower_boundary, '--', color='white', label='Lower Boundary')
-plt.fill_between(time, lower_boundary, upper_boundary, color='blue', alpha=0.1, label='Acceptance Region')
-
-# Highlight significant result
-significant_time = time[test_statistic > upper_boundary]
-significant_statistic = test_statistic[test_statistic > upper_boundary]
-if significant_time.size > 0:
-    plt.scatter(significant_time, significant_statistic, color='yellow', s=100, edgecolor='white', zorder=5)
-    for t, s in zip(significant_time, significant_statistic):
-        plt.plot([t, t], [s, 0], 'yellow', linewidth=1, linestyle=':')
-        plt.plot(t, s, 'yellow', marker='o', markersize=15, fillstyle='none')
-
-# Formatting
-plt.title('Group Sequential Testing')
-plt.xlabel('Time')
-plt.ylabel('Test Statistic')
-plt.legend()
-plt.grid(True)
-plt.ylim(-5, 5)
-plt.xlim(0, time.size + 1)
-plt.gca().set_facecolor('blue')
-plt.gca().spines['bottom'].set_color('white')
-plt.gca().spines['left'].set_color('white')
-plt.gca().tick_params(axis='x', colors='white')
-plt.gca().tick_params(axis='y', colors='white')
-plt.gca().title.set_color('white')
-plt.gca().yaxis.label.set_color('white')
-plt.gca().xaxis.label.set_color('white')
-
-plt.show()
 
 
 
