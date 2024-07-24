@@ -67,84 +67,13 @@ class ABTEST :
 # seeing the behaviour of power in function of N (for different alpha ) (curve 2)
 # 
 
-# %%
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.stats import norm
-
-# Define the range of x values
-x = np.linspace(0, 0.6, 100)
-ratio=0.5
-baseline=0.5
-n=1000 #total sample size
-alpha=0.05
-# Compute the CDF values for the standard normal distribution (mean=0, std=1)
-def quant(n,ratio,baseline,mde,alpha):
-    m=sqrt(n*ratio*(1-ratio))*baseline*mde-norm.ppf(1-alpha/2, loc=0, scale=1)
-    return m 
-cdf_values=[]
-for d in x : 
-    cdf_values.append(norm.cdf(quant(n,ratio,baseline,d,alpha), loc=0, scale=1)*100)
-
-# Plot the CDF
-plt.figure(figsize=(10, 6))
-plt.plot(x, cdf_values, color='blue')
-#plt.title('Cumulative Distribution Function (CDF) of a Standard Normal Distribution')
-plt.xlabel('MDE')
-plt.ylabel('Power %')
-#plt.legend()
-plt.grid(True)
-plt.show()
-
-
-# %%
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.stats import norm
-
-# Define the range of x values
-x = np.linspace(0, 50000 ,100)
-ratio=0.5
-p=baseline=0.5
-alpha=0.05
-mde=0.1
-# Compute the CDF values for the standard normal distribution (mean=0, std=1)
-def quant(n,ratio,baseline,mde,alpha):
-    m=sqrt(n*ratio*(1-ratio))*baseline*mde-norm.ppf(1-alpha/2, loc=0, scale=1)
-    return m 
-cdf_values=cdf_values1=[]
-cdf_values1=[]
-for d in x : 
-
-    cdf_values.append(norm.cdf(quant(d,ratio,baseline,mde,alpha), loc=0, scale=1)*100)
-    cdf_values1.append(norm.cdf(quant(d,ratio,baseline,mde,0.01), loc=0, scale=1)*100)
-
-# Plot the CDF
-plt.figure(figsize=(10, 6))
-plt.plot(x, cdf_values, label='a=0.05',color='blue')
-plt.plot(x, cdf_values1, label='a=0.01',color='red')
-
-#plt.title('Cumulative Distribution Function (CDF) of a Standard Normal Distribution')
-plt.xlabel('N')
-plt.ylabel('Power %')
-plt.legend()
-plt.grid(True)
-plt.show()
-
-# %% [markdown]
-# NO FREE LUNCH, decreasing type 1 ERROR (reject wrongly H0) DECREASES statistical power(detect a true significant effect)
 
 # %%
 #Unequal allocation between traffic 
+#to finish
 
 # %%
-def estimateSZ (p,mde,r,alpha,beta) :
-        #we assume the two population have the same variance which is plausible under H0=sigma=self.baseline(1-self.baseline)
-        sigma_2=p*(1-p)
-        m=1/(r*(1-r))*sigma_2*(norm.ppf(1-alpha/2, loc=0, scale=1)+norm.ppf(1-beta, loc=0, scale=1))**2/(p*mde)**2
-        ###add the ratio data split 
-    
-        return (floor(m))
+
 
 # %%
 import numpy as np
