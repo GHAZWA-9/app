@@ -21,6 +21,7 @@ import pandas as pd
 from scipy import stats  
 from scipy.stats import norm
 from math import *
+import matplotlib.pyplot as plt 
 class ABTEST :
 
     def __init__(self, nv=2,mde=0.05,alpha=0.05,beta=0.2,ctr1=0.1,r=0.5):
@@ -47,7 +48,23 @@ class ABTEST :
         return days_required
 
             
-    
+    def plot_distributions(self, sample_size):
+        control_mean = self.baseline
+        treatment_mean = self.baseline*(1+self.mde)
+        control_std = np.sqrt(control_mean * (1 - control_mean) / sample_size)
+        treatment_std = np.sqrt(treatment_mean * (1 - treatment_mean) / sample_size)
+        
+        control_group = np.random.normal(control_mean, control_std, 10000)
+        treatment_group = np.random.normal(treatment_mean, treatment_std, 10000)
+
+        plt.figure(figsize=(10, 5))
+        plt.hist(control_group, bins=50, alpha=0.5, label='Control')
+        plt.hist(treatment_group, bins=50, alpha=0.5, label='Treatment')
+        plt.legend(loc='upper right')
+        plt.xlabel('Conversion Rate')
+        plt.ylabel('Frequency')
+        plt.title('Distributions of Conversion Rates')
+        return plt
 
 
 
