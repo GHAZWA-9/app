@@ -38,11 +38,12 @@ class ABTEST :
         
         sigma_2=self.baseline*(1-self.baseline)
         m=0
+        S=(self.ratio*(1-self.ratio))
         if click=='One-sided Test' : 
 
-            m=1/(self.ratio*(1-self.ratio))*sigma_2*(norm.ppf(1-self.alpha, loc=0, scale=1)+norm.ppf(1-self.beta, loc=0, scale=1))**2/(self.baseline*self.mde)**2
+            m=2*sigma_2*(norm.ppf(1-self.alpha, loc=0, scale=1)+norm.ppf(1-self.beta, loc=0, scale=1))**2/(self.baseline*self.mde)**2
         else : 
-            m=1/(self.ratio*(1-self.ratio))*sigma_2*(norm.ppf(1-self.alpha/2, loc=0, scale=1)+norm.ppf(1-self.beta, loc=0, scale=1))**2/(self.baseline*self.mde)**2
+            m=2*sigma_2*(norm.ppf(1-self.alpha/2, loc=0, scale=1)+norm.ppf(1-self.beta, loc=0, scale=1))**2/(self.baseline*self.mde)**2
         ###add the ratio data split 
 
     

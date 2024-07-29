@@ -21,8 +21,8 @@ test_type = st.radio("Hypothesis", ('One-sided Test', 'Two-sided Test'))
 alpha = st.slider('Significance Level (α)', 0.01, 0.10, 0.05)
 beta = st.slider('Statistical Power (1 - β)', 0.65, 0.95, 0.80)
 daily_visitors = st.number_input('Daily Visitors', min_value=100, value=1000)
-ab_split = st.number_input('Test vs. Control', 0.1, 1.0, 0.5, step=0.01)
-
+#ab_split = st.number_input('Test vs. Control', 0.1, 1.0, 0.5, step=0.01)
+ab_split=1
 # Calculate the sample size per group
 
 calculator = ABTEST(2,minimum_effect,alpha,1 - beta,baseline_conversion)
@@ -30,21 +30,16 @@ sample_size = calculator.get_sample_size (test_type)
 duration = calculator.calculate_duration(daily_visitors,test_type)
 #st.write(f"Required sample size per group: {sample_size}")
 #st.write(f"Duration in days (assuming equal traffic to both versions): {duration}")
+num_variants = st.number_input('Number of Variants', min_value=2, max_value=10, value=2, step=1)
 
 # Create an instance of the ABTEST CLASS
 #Number of variations is taken into account in the duration of the test calculation
 # Displaying results with progress bars
-col1, col2 = st.columns(2)
-with col1:
-    st.markdown("### Variant Group Size")
-    st.progress(1-ab_split)
 
-    st.write(f"{int(sample_size*(1-ab_split))} user")
-with col2:
-    st.markdown("### Control Group Size")
-    st.progress(ab_split)
-    st.write(f"{int(sample_size*ab_split)} user")
-test_duration = np.ceil(sample_size / daily_visitors)
+   
+
+st.metric(label="Sample Size per variation", value=f"{sample_size}")
+test_duration=np.ceil(num_variants*sample_size /daily_visitors)
 
 # Création du graphique de jauge
 fig = go.Figure(go.Indicator(
