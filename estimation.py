@@ -32,18 +32,26 @@ class ABTEST :
         self.beta=beta 
         self.ratio=r
 
-    def get_sample_size (self) :
+    def get_sample_size (self,click) :
         #we assume the two population have the same variance which is plausible under H0=sigma=self.baseline(1-self.baseline)
+        
+        
         sigma_2=self.baseline*(1-self.baseline)
-        m=1/(self.ratio*(1-self.ratio))*sigma_2*(norm.ppf(1-self.alpha/2, loc=0, scale=1)+norm.ppf(1-self.beta, loc=0, scale=1))**2/(self.baseline*self.mde)**2
+        m=0
+        if click=='One-sided Test' : 
+
+            m=1/(self.ratio*(1-self.ratio))*sigma_2*(norm.ppf(1-self.alpha, loc=0, scale=1)+norm.ppf(1-self.beta, loc=0, scale=1))**2/(self.baseline*self.mde)**2
+        else : 
+            m=1/(self.ratio*(1-self.ratio))*sigma_2*(norm.ppf(1-self.alpha/2, loc=0, scale=1)+norm.ppf(1-self.beta, loc=0, scale=1))**2/(self.baseline*self.mde)**2
         ###add the ratio data split 
+
     
         return (floor(m))
 
         
         
-    def calculate_duration(self, weekly_traffic):
-        sample_size =self.get_sample_size()
+    def calculate_duration(self, weekly_traffic,click):
+        sample_size =self.get_sample_size(click)
         days_required = np.ceil(sample_size / weekly_traffic)
         return days_required
 
