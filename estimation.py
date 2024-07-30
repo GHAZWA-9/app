@@ -24,21 +24,21 @@ from math import *
 import matplotlib.pyplot as plt 
 class ABTEST :
 
-    def __init__(self, nv=2,mde=0.05,alpha=0.05,beta=0.2,ctr1=0.1,r=0.5):
+    def __init__(self, nv=2,mde=0.05,alpha=0.05,beta=0.2,ctr1=0.1,traffic=1000):
         self.nbre_va = nv
         self.mde=mde
         self.alpha=alpha 
         self.baseline=ctr1
         self.beta=beta 
-        self.ratio=r
-
+        #self.ratio=r
+        self.traffic=traffic
     def get_sample_size (self,click) :
         #we assume the two population have the same variance which is plausible under H0=sigma=self.baseline(1-self.baseline)
         
         
         sigma_2=self.baseline*(1-self.baseline)
         m=0
-        S=(self.ratio*(1-self.ratio))
+        #S=(self.ratio*(1-self.ratio))
         if click=='One-sided Test' : 
 
             m=2*sigma_2*(norm.ppf(1-self.alpha, loc=0, scale=1)+norm.ppf(1-self.beta, loc=0, scale=1))**2/(self.baseline*self.mde)**2
@@ -74,7 +74,10 @@ class ABTEST :
         plt.ylabel('Frequency')
         plt.title('Distributions of Conversion Rates')
         return plt
-
+    def calculate_mde(self) :
+        sigma_2=self.baseline*(1-self.baseline)
+        s=(norm.ppf(1-self.alpha, loc=0, scale=1)+norm.ppf(1-self.beta, loc=0, scale=1))**2*2*sigma_2/ self.traffic
+        return (np.sqrt(s)*100)
 
 
 
