@@ -41,32 +41,44 @@ if page == "A/B Test Sample Size Calculator":
     duration = calculator.calculate_duration(daily_visitors, test_type)
     # st.write(f"Required sample size per group: {sample_size}")
     # st.write(f"Duration in days (assuming equal traffic to both versions): {duration}")
-    num_variants = st.number_input(
-        "Number of Variants", min_value=2, max_value=10, value=2, step=1
-    )
+
+
+# Step 1: Get the number of variations
+    num_variants = st.number_input('Number of Variants', min_value=2, max_value=10, value=2, step=1)
+
+    # Step 2: Create a dictionary to store the percentage allocations
     allocations = {}
 
-# Step 3: Generate input fields dynamically based on the number of variations
-    for i in range(1, num_variants + 1):
-        allocations[f'Variation {i}'] = st.slider(f'Allocation for Variation {i} (%)', 0, 100, 100 // num_variants)
+# Using columns to layout the sliders neatly
+    cols = st.columns(num_variants)
 
-# Check if allocations sum to 100%
+    # Step 3: Generate input fields dynamically within columns
+    for i, col in enumerate(cols):
+        with col:
+            if i < num_variants and i==0:
+                allocations[f'Control'] = st.slider(f'Control  Allocation (%)', 0, 100, 100 // num_variants)
+            elif i < num_variants : 
+                allocations[f'Variant {i}'] = st.slider(f'Variant {i} Allocation (%)', 0, 100, 100 // num_variants)
+    
+
+    # Check if allocations sum to 100%
     total_allocation = sum(allocations.values())
 
-# Display the allocations
-    st.write("Allocations:")
-    for variation, percentage in allocations.items():
-        st.write(f"{variation}: {percentage}%")
+    # Display the allocations using an expander
+    with st.expander("See Allocation Details"):
+        for variation, percentage in allocations.items():
+            st.write(f"{variation}: {percentage}%")
+            st.progress(percentage)
 
-# Step 4: Validate the total allocation
+    # Step 4: Validate the total allocation
     if total_allocation == 100:
         st.success("Total allocation correctly sums up to 100%.")
     else:
         st.error(f"Total allocation is off by {100 - total_allocation}%. Please adjust to sum up to 100%.")
 
-    # Create an instance of the ABTEST CLASS
-    # Number of variations is taken into account in the duration of the test calculation
-    # Displaying results with progress bars
+        # Create an instance of the ABTEST CLASS
+        # Number of variations is taken into account in the duration of the test calculation
+        # Displaying results with progress bars
 
     st.metric(label="Sample Size per variation", value=f"{sample_size}")
     test_duration = np.ceil(num_variants * sample_size / daily_visitors)
