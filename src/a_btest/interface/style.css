@@ -1,0 +1,51 @@
+body {
+    font-family: 'Arial', sans-serif;
+    color: #ffffff; /* White text */
+    background-color: #5F4B8B; /* Primary purple similar to Kameleoon's */
+}
+
+h1 {
+    color: #ffffff; /* White heading */
+    text-align: center; /* Centering the title */
+    padding-top: 20px;
+}
+
+#container {
+    background-color: #6D3AB7; /* Secondary purple, slightly lighter */
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    margin: 50px auto; /* Centering and giving some top margin */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25); /* Subtle shadow */
+}
+
+input[type="number"], input[type="submit"] {
+    width: calc(100% - 18px); /* Full width with padding correction */
+    margin-top: 5px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+}
+
+input[type="submit"] {
+    background-color: #8A2BE2; /* Vibrant purple for submit button */
+    color: white;
+    cursor: pointer;
+    display: block; /* Make the button block to fill space */
+    margin-top: 10px;
+}
+
+input[type="submit"]:hover {
+    background-color: #9D55B8; /* Lighter purple on hover */
+}
+
+input[type="number"] {
+    background-color: #fff; /* White background for inputs */
+    color: #333; /* Dark text for readability */
+}
+
+label {
+    color: #D1B3FF; /* Light purple for a gentle contrast */
+    display: block; /* Ensure each label is on a new line */
+    margin-top: 10px;
+}

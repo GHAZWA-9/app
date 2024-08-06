@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/B Test Sample Size Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <div id="container">
+        <h1>A/B Test Sample Size Calculator</h1>
+        <form id="calculatorForm">
+            <label for="baselineConversion">Baseline Conversion Rate (%):</label>
+            <input type="number" id="baselineConversion" name="baselineConversion" min="0" max="100" value="10"><br>
+
+            <label for="minimumEffect">Minimum Detectable Effect (%):</label>
+            <input type="number" id="minimumEffect" name="minimumEffect" min="0.1" max="100" value="20"><br>
+
+            <label for="dailyVisitors">Daily Visitors:</label>
+            <input type="number" id="dailyVisitors" name="dailyVisitors" min="100" value="1000"><br>
+
+            <input type="submit" value="Calculate">
+        </form>
+        <div id="results">
+            <!-- Results will be displayed here -->
+        </div>
+    </div>
+</body>
+</html>
+
