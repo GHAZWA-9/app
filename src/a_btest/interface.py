@@ -6,6 +6,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 import streamlit as st
+import seaborn as sns
+import plots
 import plotly.graph_objects as go
 
 
@@ -16,6 +18,7 @@ page = st.sidebar.selectbox(
     "",
     [
         "A/B Test Sample Size Calculator",
+        "VISUALIZATION" ,
         "Minimum Detectable Effect Calculator",
     ],
 )
@@ -114,6 +117,12 @@ if page == "A/B Test Sample Size Calculator":
     )  # Adjusting size of the gauge
 
     st.plotly_chart(fig, use_container_width=True)
+
+
+elif page == "VISUALIZATION":
+    plots.interactive_plot()
+
+
 
 else:
     
