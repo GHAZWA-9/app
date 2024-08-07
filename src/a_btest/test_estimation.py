@@ -1,6 +1,7 @@
 import unittest
 from estimation import ABTEST
 
+
 class TestABTEST(unittest.TestCase):
     def setUp(self):
         self.abtest = ABTEST()
@@ -20,5 +21,6 @@ class TestABTEST(unittest.TestCase):
         plt = self.abtest.plot_distributions(500)
         self.assertIsNotNone(plt)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
