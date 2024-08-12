@@ -12,12 +12,12 @@
 # H0: pas de différences entre l’originale et la variation
 """
 
-import math as m
+from math import sqrt
 
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
-from scipy.stats import norm, stats
+from scipy.stats import norm
 
 
 class ABTEST:
@@ -43,24 +43,16 @@ class ABTEST:
         self.ratio_test = r2  # traffic proportion of the test group
         self.traffic = traffic  # current average number of visiters
 
-    def get_sample_size(self, click: str) -> int:
+    def get_sample_size(self, click="One-sided Test") -> int:
         """
         we assume the two population have the same variance which is plausible under H0=sigma=self.baseline(1-self.baseline)
 
         """
         sigma_2 = self.baseline * (1 - self.baseline)
         if click == "One-sided Test":
-
             m = (
-                (
-                    2
-                    * sigma_2
-                    * (norm.ppf(1 - self.alpha) + norm.ppf(1 - self.beta)) ** 2
-                )
-                / self.ratio_control
-                * self.ratio_test
-                * (self.baseline * self.mde) ** 2
-            )
+                2 * sigma_2 * (norm.ppf(1 - self.alpha) + norm.ppf(1 - self.beta)) ** 2
+            ) / (self.ratio_control * self.ratio_test * (self.baseline * self.mde) ** 2)
 
         else:
             m = (
@@ -76,7 +68,7 @@ class ABTEST:
 
         ###add the ratio data split
 
-        return np.floor(m)
+        return int(m)
 
     def calculate_duration(self, weekly_traffic: int, click="One-sided Test") -> int:
         sample_size = self.get_sample_size(click)
@@ -100,16 +92,14 @@ class ABTEST:
         return plt"""
 
     def calculate_mde(self) -> float:
-        n = self.traffic / 2
+        n = self.traffic / self.nbre_va
 
         # Calculate Z-scores for the given significance level and power
-        z_alpha = stats.norm.ppf(1 - self.alpha / 2)
-        z_beta = stats.norm.ppf(1 - self.beta)
+        z_alpha = norm.ppf(1 - self.alpha)
+        z_beta = norm.ppf(1 - self.beta)
 
         # Calculate the MDE
-        mde = (z_alpha + z_beta) * math.sqrt(
-            (2 * self.baseline * (1 - self.baseline) / n)
-        )
+        mde = (z_alpha + z_beta) * sqrt((2 * self.baseline * (1 - self.baseline) / n))
 
         return mde
         return np.sqrt(s) * 100
