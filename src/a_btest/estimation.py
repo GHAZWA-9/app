@@ -102,7 +102,6 @@ class ABTEST:
         mde = (z_alpha + z_beta) * sqrt((2 * self.baseline * (1 - self.baseline) / n))
 
         return mde
-        return np.sqrt(s) * 100
 
     def generate_plot(self, click="One-sided Test") -> plt:
         sigma = np.sqrt(self.baseline * (1 - self.baseline))
