@@ -38,7 +38,7 @@ if submit_button:
             {
                 "Number of weeks": weeks,
                 " Min. Det.Effect (MDE) %": mde * 100,
-                "Visitors/variant": visitors,
+                "Visitorsper /variant": visitors,
             }
         )
 
