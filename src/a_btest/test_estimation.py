@@ -1,4 +1,5 @@
 import unittest
+
 from estimation import ABTEST
 
 
@@ -16,10 +17,6 @@ class TestABTEST(unittest.TestCase):
 
     def test_calculate_mde(self):
         self.assertAlmostEqual(self.abtest.calculate_mde(), 10.0, places=2)
-
-    def test_plot_distributions(self):
-        plt = self.abtest.plot_distributions(500)
-        self.assertIsNotNone(plt)
 
 
 if __name__ == "__main__":

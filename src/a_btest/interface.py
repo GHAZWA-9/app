@@ -1,14 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go
-import plots
 import streamlit as st
 from estimation import ABTEST
 from scipy.stats import norm
 
 # st.title('A/B Test Sample Size Calculator')
-
-
 
 
 page = st.sidebar.selectbox(
@@ -40,9 +37,9 @@ if page == "A/B Test Sample Size Calculator":
     ab_split = 1
     # Calculate the sample size per group
 
-    #calculator = ABTEST(2, minimum_effect, alpha, 1 - beta, baseline_conversion)
-    #sample_size = calculator.get_sample_size(test_type)
-    #duration = calculator.calculate_duration(daily_visitors, test_type)
+    # calculator = ABTEST(2, minimum_effect, alpha, 1 - beta, baseline_conversion)
+    # sample_size = calculator.get_sample_size(test_type)
+    # duration = calculator.calculate_duration(daily_visitors, test_type)
     # st.write(f"Required sample size per group: {sample_size}")
     # st.write(f"Duration in days (assuming equal traffic to both versions): {duration}")
 
@@ -62,26 +59,35 @@ if page == "A/B Test Sample Size Calculator":
         with col:
             if i < num_variants and i == 0:
                 allocations[f"Control"] = st.slider(
-                    f"Control  Allocation (%)", 0, 100, 100 //num_variants
+                    f"Control  Allocation (%)", 0, 100, 100 // num_variants
                 )
             elif i < num_variants:
                 allocations[f"Variant {i}"] = st.slider(
                     f"Variant {i} Allocation (%)", 0, 100, 100 // num_variants
                 )
-    variant_allocations = {key: val for key, val in allocations.items() if key != "Control"}
+    variant_allocations = {
+        key: val for key, val in allocations.items() if key != "Control"
+    }
     if variant_allocations:  #
-        ratio_test = min(variant_allocations.values())/100
-        ratio_control = allocations["Control"]/100
-        calculator = ABTEST(2, minimum_effect, alpha, beta, baseline_conversion, 1000, ratio_control, ratio_test)
+        ratio_test = min(variant_allocations.values()) / 100
+        ratio_control = allocations["Control"] / 100
+        calculator = ABTEST(
+            2,
+            minimum_effect,
+            alpha,
+            beta,
+            baseline_conversion,
+            1000,
+            ratio_control,
+            ratio_test,
+        )
         sample_size = calculator.get_sample_size(test_type)
-    
+
     # Display the allocations using an expander
     with st.expander("See Allocation Details"):
         for variation, percentage in allocations.items():
             st.write(f"{variation}: {percentage}%")
             st.progress(percentage)
-
-
 
         # Create an instance of the ABTEST CLASS
         # Number of variations is taken into account in the duration of the test calculation
@@ -126,25 +132,27 @@ if page == "A/B Test Sample Size Calculator":
 
 elif page == "Visualization":
 
-    baseline_conversion = (st.number_input("Baseline Conversion Rate (%)", min_value=0.0) / 100)
-    minimum_effect = (st.number_input("Minimum Detectable Effect (%)", min_value=0.0) / 100)
+    baseline_conversion = (
+        st.number_input("Baseline Conversion Rate (%)", min_value=0.0) / 100
+    )
+    minimum_effect = (
+        st.number_input("Minimum Detectable Effect (%)", min_value=0.0) / 100
+    )
     test_type = st.radio("Hypothesis", ("One-sided Test", "Two-sided Test"))
     alpha = st.slider("Significance Level (α)", 0.01, 0.10, 0.05)
     beta = st.slider("Statistical Power (1 - β)", 0.65, 0.95, 0.80)
-    sigma=baseline_conversion*(1-baseline_conversion)
+    sigma = baseline_conversion * (1 - baseline_conversion)
     st.write("## Interactive AB Test Power Analysis")
-    calculator = ABTEST(2, minimum_effect, alpha,  beta, baseline_conversion)
-    if st.button('Generate Plot'):
+    calculator = ABTEST(2, minimum_effect, alpha, beta, baseline_conversion)
+    if st.button("Generate Plot"):
         calculator.generate_plot(test_type)
 
-       
 
 else:
 
     st.title("Minimum Detectable Effect Calculator")
 
     with st.form("my_form"):
-
 
         n = st.number_input("Number of Visitors", min_value=0, value=15000, step=1000)
         baseline_cr = st.number_input(
@@ -159,4 +167,5 @@ else:
             new_cr = baseline_cr * (1 + mde / 100)
             st.success(f"Minimal Detectable Effect: {mde:.2f}% (relative)")
             st.success(
-                f"An uplift from {baseline_cr}% to {new_cr:.2f}% will be detectable")
+                f"An uplift from {baseline_cr}% to {new_cr:.2f}% will be detectable"
+            )
