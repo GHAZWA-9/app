@@ -247,3 +247,24 @@ The `<section>` tag is an HTML5 element used to define sections within a webpage
 ### 11. Code Execution 
 
 ![alt text](Display2.png )
+
+#### CSS 
+
+CSS (Cascading Style Sheets) is a language that helps you style your HTML webpage. It allows you to change colors, fonts, spacing, and layout of your webpage.
+
+## 1. What is CSS?
+
+CSS stands for **Cascading Style Sheets**. It is used to style HTML elements and control how they look on a webpage.
+
+## 2. How to Add CSS to HTML
+
+There are three simple ways to add CSS to your HTML:
+
+### 2.1 Inline CSS
+
+Add CSS directly to an HTML tag using the `style` attribute.
+
+```html
+<p style="color: blue;">This is a blue paragraph.</p>
+
+```
