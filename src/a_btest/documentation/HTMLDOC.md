@@ -248,7 +248,7 @@ The `<section>` tag is an HTML5 element used to define sections within a webpage
 
 ![alt text](Display2.png )
 
-#### CSS 
+# CSS 
 
 CSS (Cascading Style Sheets) is a language that helps you style your HTML webpage. It allows you to change colors, fonts, spacing, and layout of your webpage.
 
