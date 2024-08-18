@@ -98,6 +98,10 @@ Here's a simple example of a complete HTML page:
   <a href="https://www.example.com">Visit Example Website</a>
 </body>
 </html>
+```
 
-![alt text](Display.png "Code Execution")
+
+### 8. Code Execution 
+
+![alt text](Display.png )
 
