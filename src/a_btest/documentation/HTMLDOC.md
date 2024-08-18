@@ -38,8 +38,9 @@ HTML (HyperText Markup Language) is the standard language used to create web pag
       <title>My First Webpage</title>
     </head>
     <body>
-      <h1>Welcome to My Website</h1>
-      <p>This is my first webpage.</p>
+      <h1>Big Title            </h1>
+      <h2>  subheading         </h2>
+      <p> This is my first webpage.</p>
     </body>
     </html>
     ```
@@ -105,3 +106,144 @@ Here's a simple example of a complete HTML page:
 
 ![alt text](Display.png )
 
+
+### 9. Common Tags  `<div>`, `<section>`, and `<article>`
+
+Understanding the structure of a webpage is crucial for effective web development. HTML provides several semantic elements to help structure web content properly. Here’s a simple breakdown of three commonly used HTML elements: `<div>`, `<section>`, and `<article>`.
+
+#### 1. `<div>`
+- **What is it?** The `<div>` tag is a generic container used primarily for styling or layout purposes via CSS or JavaScript. It does not inherently represent anything specific about its content.
+- **Usage:** Use `<div>` when you need a container for elements, and no other semantic element is appropriate. It’s perfect for applying CSS styles or creating page layouts.
+- **Example:**
+  ```html
+  <div class="header">
+    My Website Header
+  </div>
+  ```
+
+
+
+#### 2. `<article>`
+
+The `<article>` tag is an HTML5 element used to define independent, self-contained content within a webpage. This content should make sense on its own and could be distributed or reused independently of the rest of the page.
+
+## Key Points:
+- **Purpose:** The `<article>` tag is intended for content that can stand alone, such as a blog post, news article, forum post, or any other piece of content that could be distributed or syndicated.
+- **Self-Contained:** The content inside an `<article>` should be meaningful and complete on its own. For example, if you remove the article from the rest of the website, it should still make sense.
+- **Semantic Meaning:** Using the `<article>` tag helps with the semantic structure of your webpage, making it easier for search engines and other tools to understand the content of your page.
+
+## Example:
+
+```html
+<article>
+  <h2>Beginning of a context </h2>
+  <p>article 
+    blog post 
+    news 
+    reviews 
+    users comments
+  </p>
+</article>
+```
+#### 3.  `<section>` Tag 
+
+The `<section>` tag is an HTML5 element used to define sections within a webpage. It is typically used to group related content together. Unlike `<article>`, which is used for self-contained content, `<section>` is used to organize content within a document.
+
+## Key Points:
+- **Purpose:** The `<section>` tag is intended to group related content together. It often includes a heading and can be nested within other sections to create a hierarchical structure.
+- **Contextual Grouping:** Content within a `<section>` should be thematically related. The tag helps to structure the webpage by dividing it into different sections, making it easier to understand and navigate.
+- **Semantic Meaning:** The `<section>` tag adds semantic meaning to your HTML, helping search engines and other tools understand the structure and purpose of different parts of your webpage.
+
+## Example:
+
+```html
+<section>
+  <h2>About Us</h2>
+  <p>Our company has been providing quality services for over 10 years. We are dedicated to ensuring customer satisfaction and delivering top-notch products.</p>
+</section>
+
+<section>
+  <h2>Our Services</h2>
+  <p>We offer a wide range of services to meet your needs, including web development, graphic design, and digital marketing.</p>
+</section>
+```
+
+### 10. Code Execution with different Tags 
+
+```html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Structure Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        section {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        article {
+            margin-bottom: 20px;
+        }
+        .sidebar {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>My Webpage</h1>
+    </header>
+
+    <section>
+        <h2>Latest News</h2>
+        <article>
+            <h3>Article 1: Web Development Trends</h3>
+            <p>Web development is constantly evolving. In 2024, we expect to see a rise in AI-powered tools that will change the way websites are created.</p>
+        </article>
+
+        <article>
+            <h3>Article 2: The Future of AI</h3>
+            <p>Artificial Intelligence continues to advance at a rapid pace. Its applications are becoming more diverse, influencing various industries worldwide.</p>
+        </article>
+    </section>
+
+    <section>
+        <h2>About Our Company</h2>
+        <div class="sidebar">
+            <h3>Our Mission</h3>
+            <p>We strive to deliver high-quality web solutions that empower businesses to succeed online.</p>
+        </div>
+        <div class="main-content">
+            <h3>Who We Are</h3>
+            <p>We are a team of experienced developers and designers who are passionate about creating innovative and effective digital experiences.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 My Webpage. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+
+```
+### 11. Code Execution 
+
+![alt text](Display2.png )
