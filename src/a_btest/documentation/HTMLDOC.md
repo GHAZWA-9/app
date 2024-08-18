@@ -99,5 +99,5 @@ Here's a simple example of a complete HTML page:
 </body>
 </html>
 
-![Screenshot of HTML Page](.Display.png)
+![alt text](Display.png "Code Execution")
 
