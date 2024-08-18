@@ -29,7 +29,7 @@ if submit_button:
 
     for weeks in range(1, 6):
         test = ABTEST(
-            num_variants, 0, 0.05, beta, baseline_cr, 0.5, 0.5, weeks * weekly_traffic
+            nv=num_variants, mde=0, alpha=0.05, beta, baseline_cr, 0.5, 0.5, weeks * weekly_traffic
         )
         mde = test.calculate_mde()
         test = ABTEST(num_variants, mde, 0.05, beta, baseline_cr)
