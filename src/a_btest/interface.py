@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 import streamlit as st
 from estimation import ABTEST
 from scipy.stats import norm
+import pandas as pd
 
 # st.title('A/B Test Sample Size Calculator')
 
@@ -23,10 +24,10 @@ page = st.sidebar.selectbox(
 if page == "A/B Test Sample Size Calculator":
 
     baseline_conversion = (
-        st.number_input("Baseline Conversion Rate (%)", min_value=0.0) / 100
+        st.number_input("Baseline Conversion Rate (%)", min_value=1) / 100
     )
     minimum_effect = (
-        st.number_input("Minimum Detectable Effect (%)", min_value=0.0) / 100
+        st.number_input("Minimum Detectable Effect (%)", min_value=1) / 100
     )
     test_type = st.radio("Hypothesis", ("One-sided Test", "Two-sided Test"))
     alpha = st.slider("Significance Level (α)", 0.01, 0.10, 0.05)
@@ -34,9 +35,7 @@ if page == "A/B Test Sample Size Calculator":
     daily_visitors = st.number_input("Daily Visitors", min_value=100, value=1000)
 
     # ab_split = st.number_input('Test vs. Control', 0.1, 1.0, 0.5, step=0.01)
-    ab_split = 1
     # Calculate the sample size per group
-
     # calculator = ABTEST(2, minimum_effect, alpha, 1 - beta, baseline_conversion)
     # sample_size = calculator.get_sample_size(test_type)
     # duration = calculator.calculate_duration(daily_visitors, test_type)
@@ -45,8 +44,7 @@ if page == "A/B Test Sample Size Calculator":
 
     # Step 1: Get the number of variations
     num_variants = st.number_input(
-        "Number of Variants", min_value=2, max_value=10, value=2, step=1
-    )
+        "Number of Variants", min_value=2, max_value=10, value=2, step=1)
 
     # Step 2: Create a dictionary to store the percentage allocations
     allocations = {}
@@ -93,15 +91,15 @@ if page == "A/B Test Sample Size Calculator":
         # Number of variations is taken into account in the duration of the test calculation
         # Displaying results with progress bars
 
-    st.metric(label="Total Sample Size ", value=f"{sample_size}")
-    test_duration = np.ceil(num_variants * sample_size / daily_visitors)
+    st.metric(label="Total Sample Size ", value=f"{int(sample_size)}")
+    #test_duration = np.round((sample_size / daily_visitors),1)
     duration = calculator.calculate_duration(daily_visitors, test_type)
     st.write(f"Duration in days (assuming equal traffic to both versions): {duration})")
     # Création du graphique de jauge
     fig = go.Figure(
         go.Indicator(
             mode="gauge+number",
-            value=test_duration,
+            value=duration,
             domain={"x": [0, 1], "y": [0, 1]},
             title={"text": "Test Duration in Days"},
             gauge={
@@ -118,14 +116,15 @@ if page == "A/B Test Sample Size Calculator":
                 "threshold": {
                     "line": {"color": "red", "width": 4},
                     "thickness": 0.75,
-                    "value": test_duration,
+                    "value": duration,
                 },
             },
         )
     )
     fig.update_layout(
         autosize=False, width=500, height=300
-    )  # Adjusting size of the gauge
+    )  # Adjusting size 
+    
 
     st.plotly_chart(fig, use_container_width=True)
 
@@ -133,10 +132,10 @@ if page == "A/B Test Sample Size Calculator":
 elif page == "Visualization":
 
     baseline_conversion = (
-        st.number_input("Baseline Conversion Rate (%)", min_value=0.0) / 100
+        st.number_input("Baseline Conversion Rate (%)", min_value=1) / 100
     )
     minimum_effect = (
-        st.number_input("Minimum Detectable Effect (%)", min_value=0.0) / 100
+        st.number_input("Minimum Detectable Effect (%)", min_value=1) / 100
     )
     test_type = st.radio("Hypothesis", ("One-sided Test", "Two-sided Test"))
     alpha = st.slider("Significance Level (α)", 0.01, 0.10, 0.05)
@@ -145,8 +144,8 @@ elif page == "Visualization":
     st.write("## Interactive AB Test Power Analysis")
     calculator = ABTEST(2, minimum_effect, alpha, beta, baseline_conversion)
     if st.button("Generate Plot"):
-        calculator.generate_plot(test_type)
-
+        fig = calculator.generate_plot(test_type)
+        st.pyplot(fig)
 
 else:
 
@@ -154,18 +153,43 @@ else:
 
     with st.form("my_form"):
 
-        n = st.number_input("Number of Visitors", min_value=0, value=15000, step=1000)
-        baseline_cr = st.number_input(
-            "Conversion Rate (%)", min_value=0.0, value=3.0, step=0.1
+
+
+        weekly_traffic = st.number_input(
+            "weekly_traffic",
+            min_value=100,
+            value=1000,
+            step=100,
         )
-        submitted = st.form_submit_button("Calculate MDE")
-        calculator = ABTEST(2, 0, 0.05, 0.2, baseline_cr, n)
+        weekly_conversions = st.number_input(
+            "Conversions hebdomadaires", min_value=1, value=50, step=1
+        )
+        num_variants = st.number_input("Number of Variants", min_value=2, value=2, step=1)
+        baseline_cr = round(weekly_conversions / weekly_traffic, 2)
+        alpha = 0.05
+        beta = 0.2
+        submit_button = st.form_submit_button(label="Calculate")
 
-        if submitted:
+    if submit_button:
+        results = []
 
-            mde = calculator.calculate_mde()
-            new_cr = baseline_cr * (1 + mde / 100)
-            st.success(f"Minimal Detectable Effect: {mde:.2f}% (relative)")
-            st.success(
-                f"An uplift from {baseline_cr}% to {new_cr:.2f}% will be detectable"
+        for weeks in range(1, 6):
+            test = ABTEST(nv=num_variants, mde=0, alpha=0.05, beta=0.2, ctr1=baseline_cr, r1=0.5, r2=0.5, traffic=(weeks * weekly_traffic) ) 
+            mde = test.calculate_mde()
+            test = ABTEST(nv=num_variants, mde=mde, alpha=0.05, beta=0.2, ctr1=baseline_cr, r1=0.5, r2=0.5, traffic=weeks * weekly_traffic)
+            visitors = test.get_sample_size()
+            #visitors = weekly_traffic*weeks//num_variants
+            results.append(
+                {
+                "Number of weeks": weeks,
+                "Min. Det.Effect (MDE) %": f"{mde * 100:.2f}",
+                "Visitors per variant": int(visitors),
+                }
             )
+
+    results_df = pd.DataFrame(results)
+    results_df = results_df.set_index("Number of weeks")
+    st.table(results_df)
+  
+
+   

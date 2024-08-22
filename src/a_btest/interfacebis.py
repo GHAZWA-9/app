@@ -1,8 +1,8 @@
 import numpy as np
 import plotly.graph_objects as go
 import plots
-from estimation import ABTEST
 from fasthtml.common import *
+from src.estimation import ABTEST
 
 app, rt = fast_app()
 

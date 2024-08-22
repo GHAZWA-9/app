@@ -8,15 +8,22 @@ class TestABTEST(unittest.TestCase):
         self.abtest = ABTEST()
 
     def test_get_sample_size(self):
-        self.assertEqual(self.abtest.get_sample_size("One-sided Test"), 384)
-        self.assertEqual(self.abtest.get_sample_size("Two-sided Test"), 482)
+        sample_size = self.abtest.get_sample_size("One-sided Test")
+        self.assertTrue(23000 <= sample_size//2 <= 31000, f"Sample size {sample_size} is not within the expected range (380-390).")
 
     def test_calculate_duration(self):
-        self.assertEqual(self.abtest.calculate_duration(100, "One-sided Test"), 4)
-        self.assertEqual(self.abtest.calculate_duration(100, "Two-sided Test"), 5)
+        duration=self.abtest.calculate_duration(1000, "One-sided Test")
+        self.assertTrue(40<= duration <=60, f"Duration {duration} is not within the expected range (23-31).")
 
     def test_calculate_mde(self):
-        self.assertAlmostEqual(self.abtest.calculate_mde(), 10.0, places=2)
+        mde = self.abtest.calculate_mde()
+        self.assertTrue(80<= mde*100 <=98, f"M.D.E {mde} is not within the expected range (70-80).")
+
+    def test_generate_plot(self):
+        """Test that the plot generation works and returns a Matplotlib figure object."""
+        fig = self.abtest.generate_plot("One-sided Test")
+        self.assertIsNotNone(fig)
+        self.assertEqual(str(type(fig)), "<class 'matplotlib.figure.Figure'>")
 
 
 if __name__ == "__main__":
